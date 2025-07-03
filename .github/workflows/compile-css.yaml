@@ -1,38 +1,52 @@
+# .github/workflows/compile-css.yml
+# Render CSS and Javascript for MetaDocencia varnish
+# -------------------------------------------------
+# • Se ejecuta en cada push que toque los archivos listados
+# • Puede lanzarse manualmente desde la pestaña Actions
+
+name: Render CSS and Javascript
+
 on:
+  workflow_dispatch:           # habilita el botón “Run workflow”
   pull_request:
-  push: 
+  push:
+    branches: [main]
     paths:
-      - .github/workflows/compile-css.yaml
+      - .github/workflows/compile-css.yml
       - source/**
-      - source/**/**
       - postinstall.sh
       - squash-a-script.sh
       - squash-sass.sh
       - package.json
       - package-lock.json
 
-name: Render CSS and Javascript
-
 jobs:
   compress-everything:
     name: Render css/javascript
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-      - name: Clean
+
+      - name: Clean previous assets
         run: rm -rf inst/pkgdown/assets/assets/
+
       - uses: actions/setup-node@v4
-      - run: npm install
-      - name: Comple js
+        with:
+          node-version: '18'        # versión LTS estable
+
+      - run: npm ci                 # instalación reproducible
+
+      - name: Bundle JavaScript
         run: bash squash-a-script.sh
-      - name: Compile sass
+
+      - name: Compile SCSS to CSS
         run: bash squash-sass.sh
-      - name: Commit
+
+      - name: Commit regenerated assets
         run: |
           git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add assets/ || echo ""
-          git add inst/ || echo ""
+          git config --local user.name  "GitHub Actions"
+          git add assets/ inst/ || true
           git commit -m 'regenerated css/js' || echo "No changes to commit"
-          git push origin || echo "No changes to commit"
-
+          git push origin HEAD || echo "No changes to commit"
