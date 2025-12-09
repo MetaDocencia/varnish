@@ -193,8 +193,9 @@
         </li>
         {{/instructor}}
         {{#more}}
-        {{! Renderizar directamente los ítems adicionales (por ejemplo, Referencias) como elementos de primer nivel }}
-        {{& more }}
+        <li class="nav-item">
+          <a class="nav-link" href="{{#site}}{{root}}{{/site}}reference.html">Referencias</a>
+        </li>
         {{/more}}
       </ul>
     </div>
