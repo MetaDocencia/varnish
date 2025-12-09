@@ -158,13 +158,9 @@
                       {{/instructor}}
                       {{^instructor}}
                       {{^overview}}
-                      <li>
-                        <a href="{{#site}}{{root}}{{/site}}key-points.html">{{ translate.KeyPoints }}</a>
-                      </li>
+                      {{! Se oculta el enlace a Puntos Clave para la vista de quienes aprenden }}
                       {{/overview}}
-                      <li>
-                        <a href="{{#site}}{{root}}{{/site}}reference.html#glossary">{{ translate.Glossary }}</a>
-                      </li>
+                      {{! Se oculta el enlace a Glosario para la vista de quienes aprenden }}
                       <li>
                         <a href="{{#site}}{{root}}{{/site}}profiles.html">{{ translate.LearnerProfiles }}</a>
                       </li>
